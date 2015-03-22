@@ -6,7 +6,7 @@ var req = require('superagent')
 var BASE_URL= "https://maps.googleapis.com/maps/api/distancematrix/json?"
   , API_KEY= process.env.API_KEY
   , ZRH_HB = [47.377212, 8.540046]
-  , OUTFILE = './data.json'
+  , OUTFILE = process.env.DATA_FILE
   , BOUNDING_BOX = [[47.391144, 8.486938],[47.337659, 8.587189]]
   , OUT = require(OUTFILE)
 
