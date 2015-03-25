@@ -53,7 +53,7 @@ Object.keys(DATA).forEach(function(k){
     , time = DATA[k].t
     , feature = JSON.parse(JSON.stringify(feature_template))
 
-  feature.geometry.coordinates = [lon,lat]
+  feature.geometry.coordinates = [parseFloat(lon),parseFloat(lat)]
   feature.properties.title = time + 's, ' + dist + 'm'
   feature.properties["marker-color"] = generateColor(dist/MAX_DIST)
 
