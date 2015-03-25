@@ -55,7 +55,7 @@ Object.keys(DATA).forEach(function(k){
 
   feature.geometry.coordinates = [parseFloat(lon),parseFloat(lat)]
   feature.properties.title = time + 's, ' + dist + 'm'
-  feature.properties["marker-color"] = generateColor(dist/MAX_DIST)
+  feature.properties["marker-color"] = generateColor(time/MAX_DIST)
 
   out.features.push(feature)
 })
