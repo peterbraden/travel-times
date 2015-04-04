@@ -117,7 +117,6 @@ var makePoint = function(pt){
 }
 
 var makeColor = function(val, max){ return "hsl(" + (val/max*360) + ", 100%, 50%)"}
-/*
 mesh.forEach(function(p){
   var a = makePoint(p[0])
     , b = makePoint(p[1])
@@ -134,8 +133,7 @@ mesh.forEach(function(p){
   ctx.fill()
   //ctx.fillRect(pt[0], pt[1], 1, 1)
 })
-*/
-
+/*
 ctx.fillStyle = 'rgba(0, 0, 0, 0)'
 
 Object.keys(contours).forEach(function(c){
@@ -155,7 +153,7 @@ Object.keys(contours).forEach(function(c){
   })
 
 })
-
+*/
 
 var out = require('fs').createWriteStream(__dirname + '/out.png')
   , stream = canvas.createPNGStream();
