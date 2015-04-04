@@ -22,5 +22,14 @@ The simplest rendering of the data would be a nearest neighbor rasterising, but 
 
 The typical solution for drawing contours is an algorithm called marching squares, but this requires a square mesh. I looked into methods of tesselation, and the simplest way to generate this was to use a Delauney Triangulation to generate the triangles. This wouldn't generate the even squares needed for the Marching Squares algorithm, but I reasoned that the random distribution of points meant that I could simply use the 'Meandering Triangles' variation of the algorithm directly on the mesh.
 
+The problem with this was that my data was too noisy. One of the shortcomings of my data, as I mentioned before, was the fact that I hadn't been able to normalise for time-of-travel, so the contour image was incredibly noisy.
+
+![Noisy Contours](./images/zrh-contours-1.png)
+
+To avoid this problem, I decided to get rid of my Delauney mesh, and simply subdivide the area into squares, taking the average in each square.
+
+![Grid Contours](./images/zrh-contours-2.png)
+
+It looks like I need finer data still though.
 
 
