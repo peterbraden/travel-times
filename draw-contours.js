@@ -120,6 +120,7 @@ var makePoint = function(pt){
 
 var makeColor = function(val, max){ return "hsl(" + (val/max*180) + ", 100%, 50%)"}
 
+/*
 // COLORED MESH RENDER (DEBUG)
 mesh.forEach(function(p){
   var a = makePoint(p[0])
@@ -137,7 +138,7 @@ mesh.forEach(function(p){
   ctx.fill()
   //ctx.fillRect(pt[0], pt[1], 1, 1)
 })
-/*
+//*/
 
 Object.keys(contours).forEach(function(c){
 

@@ -20,15 +20,7 @@ The simplest rendering of the data would be a nearest neighbor rasterising, but 
 
 ![Colored Delauney Triangulation of Zurich](./images/zrh-colored-mesh.png)
 
-
 The typical solution for drawing contours is an algorithm called marching squares, but this requires a square mesh. I looked into methods of tesselation, and the simplest way to generate this was to use a Delauney Triangulation to generate the triangles. This wouldn't generate the even squares needed for the Marching Squares algorithm, but I reasoned that the random distribution of points meant that I could simply use the 'Meandering Triangles' variation of the algorithm directly on the mesh.
 
 
 
-
-
-
-## Cities:
-Zurich: 
-  , BOUNDING_BOX = [[47.391144, 8.486938],[47.337659, 8.587189]]
-  , ZRH_HB = [47.377212, 8.540046]
