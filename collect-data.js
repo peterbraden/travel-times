@@ -5,13 +5,16 @@ var req = require('superagent')
 
 var BASE_URL= "https://maps.googleapis.com/maps/api/distancematrix/json?"
   , API_KEY= process.env.API_KEY
-  , ZRH_HB = [47.377212, 8.540046]
+  , CENTER = JSON.parse(process.env.CENTER)
   , OUTFILE = process.env.DATA_FILE
-  , BOUNDING_BOX = [[47.391144, 8.486938],[47.337659, 8.587189]]
+  , BOUNDING_BOX = JSON.parse(process.env.BOUNDS)
   , OUT = require(OUTFILE)
+  , misses = 0
+
+console.log("Collecting data center:", CENTER, "bounds:", BOUNDING_BOX, " >", OUTFILE)
 
 var getPoints = function(dests, cb){
-  var query = "origins="+ ZRH_HB.join(',')
+  var query = "origins=" + CENTER.join(',')
   query += "&destinations=" + dests.map(function(c){return c.join(',')}).join('|')
   query += "&mode=transit"
   query += "&key=" + API_KEY
@@ -33,6 +36,12 @@ var handleResponse = function(req, resp, cb){
 
   json.rows.forEach(function(r){
     r.elements.forEach(function(el){
+      if (el.status && el.status == "ZERO_RESULTS"){
+        misses ++
+        i ++
+        return
+      }
+
       var dest = req[i]
         , dist = el.distance.value
         , duration = el.duration.value
@@ -88,7 +97,7 @@ var rateLimitGet = function(coordGen){
   getPoints(dests, function(err, res){
     sent += Object.keys(res).length
     storeResults.apply(this, arguments)
-    console.log("CB:", sent, Object.keys(OUT).length)
+    console.log("CB:", sent, Object.keys(OUT).length, misses)
 
     setTimeout(rateLimitGet.bind(null, coordGen), timeout)
   })

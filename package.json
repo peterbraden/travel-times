@@ -1,0 +1,23 @@
+{
+  "name": "peterbraden-travel-times",
+  "version": "1.0.0",
+  "main": "overlay-map.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/peterbraden/travel-times.git"
+  },
+  "author": "Peter Braden",
+  "license": "AGPL",
+  "bugs": {
+    "url": "https://github.com/peterbraden/travel-times/issues"
+  },
+  "homepage": "https://github.com/peterbraden/travel-times",
+  "dependencies": {
+    "canvas": "^1.2.1",
+    "delaunay-fast": "^1.0.1",
+    "superagent": "^1.1.0"
+  }
+}
