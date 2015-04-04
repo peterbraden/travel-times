@@ -18,6 +18,9 @@ My initial plan was just to render the data to geojson and rely on github's rend
 
 The simplest rendering of the data would be a nearest neighbor rasterising, but this didn't really feel like what I was after. I wanted some sort of visualisation of the thresholds of time. Drawing contours on the time-dimension seemed like a nicer solution.
 
+![Colored Delauney Triangulation of Zurich](./images/zrh-colored-mesh.png)
+
+
 The typical solution for drawing contours is an algorithm called marching squares, but this requires a square mesh. I looked into methods of tesselation, and the simplest way to generate this was to use a Delauney Triangulation to generate the triangles. This wouldn't generate the even squares needed for the Marching Squares algorithm, but I reasoned that the random distribution of points meant that I could simply use the 'Meandering Triangles' variation of the algorithm directly on the mesh.
 
 
