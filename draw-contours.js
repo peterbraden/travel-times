@@ -112,11 +112,16 @@ var Canvas = require('canvas')
 var makePoint = function(pt){ 
   return [
       (pt[0]-minLat) / (maxLat-minLat) * WIDTH
-    , (pt[1]-minLon) / (maxLon-minLon) * HEIGHT
+    , HEIGHT - ((pt[1]-minLon) / (maxLon-minLon) * HEIGHT)
   ]
 }
 
-var makeColor = function(val, max){ return "hsl(" + (val/max*360) + ", 100%, 50%)"}
+
+
+var makeColor = function(val, max){ return "hsl(" + (val/max*180) + ", 100%, 50%)"}
+
+/*
+// COLORED MESH RENDER (DEBUG)
 mesh.forEach(function(p){
   var a = makePoint(p[0])
     , b = makePoint(p[1])
@@ -133,15 +138,15 @@ mesh.forEach(function(p){
   ctx.fill()
   //ctx.fillRect(pt[0], pt[1], 1, 1)
 })
-/*
-ctx.fillStyle = 'rgba(0, 0, 0, 0)'
+//*/
 
 Object.keys(contours).forEach(function(c){
 
   ctx.strokeStyle = makeColor(c, maxTime)
   console.log(c, ctx.strokeStyle, contours[c].length)
 
-  contours[c].slice(0,1009).forEach(function(pts){
+  contours[c].forEach(function(pts){
+    ctx.beginPath()
     var start = makePoint(pts[0])
     ctx.moveTo(start[0], start[1])
 
@@ -153,7 +158,18 @@ Object.keys(contours).forEach(function(c){
   })
 
 })
-*/
+
+
+
+//*/
+var HB =[47.377212,8.540046]
+  , ENGE= [47.364254, 8.531141]
+
+ctx.fillStyle ="#fff"
+ctx.fillRect(makePoint(HB)[0], makePoint(HB)[1], 5, 5)
+
+ctx.fillStyle ="#bbb"
+ctx.fillRect(makePoint(ENGE)[0], makePoint(ENGE)[1], 5, 5)
 
 var out = require('fs').createWriteStream(__dirname + '/out.png')
   , stream = canvas.createPNGStream();
