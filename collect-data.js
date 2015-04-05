@@ -86,8 +86,9 @@ var rateLimitGet = function(coordGen){
     , maxRequests = 1000
 
   if (sent > maxRequests){
-    console.log("Exceeded rate limit")
-    process.exit(0)
+    console.log("Exceeded rate limit, sleep for Day")
+    return setTimeout(rateLimitGet.bind(null, coordGen), 1000*60*60*24)
+    //process.exit(0)
   }
 
   for (var i=0; i<ratePerReq; i++){
