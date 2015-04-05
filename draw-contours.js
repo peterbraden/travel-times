@@ -1,6 +1,8 @@
 var DATA_FILE = process.env.DATA_FILE
   , DATA = require(DATA_FILE)
   , NUM_INTERVALS = 10
+  , CENTER = JSON.parse(process.env.CENTER || "[]")
+  , IMG_LONGSIDE = parseInt(process.env.IMGLONGSIDE) || 500
 
 // First, use a Delauney Trianguulation to partition the map
 var triangulate = require("delaunay-fast").triangulate
@@ -13,6 +15,12 @@ var triangulate = require("delaunay-fast").triangulate
   , minLon = Math.min.apply(Math, points.map(function(p){return p[1]}))
   , maxLat = Math.max.apply(Math, points.map(function(p){return p[0]}))
   , maxLon = Math.max.apply(Math, points.map(function(p){return p[1]}))
+  , Canvas = require('canvas')
+  , Image = Canvas.Image
+  , HEIGHT = (maxLat-minLat) > (maxLon - minLon) ? IMG_LONGSIDE : IMG_LONGSIDE * ((maxLat-minLat)/(maxLon-minLon))
+  , WIDTH = (maxLon-minLon) > (maxLat - minLat) ? IMG_LONGSIDE : IMG_LONGSIDE * ((maxLon-minLon)/(maxLat-minLat))
+  , canvas = new Canvas(WIDTH, HEIGHT)
+  , ctx = canvas.getContext('2d')
 
 var sum = function(){
   return Array.prototype.reduce.call(arguments, function(x, y){return x + y}, 0)
@@ -102,12 +110,6 @@ for (var interval = 0; i < 1; i += 1/NUM_INTERVALS){
 
 
 // Now render
-var Canvas = require('canvas')
-  , Image = Canvas.Image
-  , WIDTH=500
-  , HEIGHT=500
-  , canvas = new Canvas(WIDTH, HEIGHT)
-  , ctx = canvas.getContext('2d')
 
 var makePoint = function(pt){ 
   return [
@@ -159,19 +161,16 @@ Object.keys(contours).forEach(function(c){
 
 
 
-//*/
-var HB =[47.377212,8.540046]
-  , ENGE= [47.364254, 8.531141]
+if (CENTER.length){
+  ctx.fillStyle ="#fff"
+  ctx.fillRect(makePoint(HB)[CENTER], makePoint(CENTER)[1], 5, 5)
+}
 
-ctx.fillStyle ="#fff"
-ctx.fillRect(makePoint(HB)[0], makePoint(HB)[1], 5, 5)
-
-ctx.fillStyle ="#bbb"
-ctx.fillRect(makePoint(ENGE)[0], makePoint(ENGE)[1], 5, 5)
 
 var out = require('fs').createWriteStream(__dirname + '/out.png')
   , stream = canvas.createPNGStream();
 
+console.log("IMG:", [minLat, minLon], [maxLat, maxLon])
 stream.on('data', function(chunk){
     out.write(chunk);
 });

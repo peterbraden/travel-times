@@ -2,12 +2,8 @@ var DATA_FILE = process.env.DATA_FILE
   , DATA = require(DATA_FILE)
   , NUM_INTERVALS = 9
   , SQUARES = 15
-  , Canvas = require('canvas')
-  , Image = Canvas.Image
-  , WIDTH=500
-  , HEIGHT=500
-  , canvas = new Canvas(WIDTH, HEIGHT)
-  , ctx = canvas.getContext('2d')
+  , CENTER = JSON.parse(process.env.CENTER || "[]")
+  , IMG_LONGSIDE = parseInt(process.env.IMGLONGSIDE) || 500
 
 var sum = function(){
   return Array.prototype.reduce.call(arguments, function(x, y){return x + y}, 0)
@@ -21,6 +17,12 @@ var points = Object.keys(DATA).map(function(x){return x.split(',').map(parseFloa
   , maxLon = Math.max.apply(Math, points.map(function(p){return p[1]}))
   , maxDist = 0
   , maxTime = 0
+  , Canvas = require('canvas')
+  , Image = Canvas.Image
+  , HEIGHT = (maxLat-minLat) > (maxLon - minLon) ? IMG_LONGSIDE : IMG_LONGSIDE * ((maxLat-minLat)/(maxLon-minLon))
+  , WIDTH = (maxLon-minLon) > (maxLat - minLat) ? IMG_LONGSIDE : IMG_LONGSIDE * ((maxLon-minLon)/(maxLat-minLat))
+  , canvas = new Canvas(WIDTH, HEIGHT)
+  , ctx = canvas.getContext('2d')
 
 for (var inc = ((maxLat-minLat)/SQUARES), i = minLat + inc; i <= maxLat; i += inc){
   
