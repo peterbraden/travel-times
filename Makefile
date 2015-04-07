@@ -1,8 +1,15 @@
 
 zurichData:
 	# Centered on HB
-	@if test -f zrh.json; then echo 'file exists'; else echo '{}' >> zrh.json; fi;
-	CENTER=[47.377212,8.540046] BOUNDS=[[47.391144,8.486938],[47.337659,8.587189]] DATA_FILE=./zrh.json node collect-data.js  
+	@if test -f zurich.json; then echo 'file exists'; else echo '{}' >> zurich.json; fi;
+	CENTER=[47.377212,8.540046] BOUNDS=[[47.391144,8.486938],[47.337659,8.587189]] DATA_FILE=./zurich.json node collect-data.js  
+
+zurichRender:
+	IMGLONGSIDE=1000 DATA_FILE=./zurich.json node draw-contours.js
+	mv out.png images/zrh-contours-1.png
+	IMGLONGSIDE=1000 DATA_FILE=./zurich.json node draw-contours2.js
+	mv out.png images/zrh-contours-2.png
+
 
 schweizData:
 	# Centered on ZRH HB

@@ -140,6 +140,8 @@ mesh.forEach(function(p){
   //ctx.fillRect(pt[0], pt[1], 1, 1)
 })
 
+ctx.fillStyle="hsla(0, 0%, 0%, 0)"
+
 Object.keys(contours).forEach(function(c){
 
   ctx.strokeStyle = makeColor(c, maxTime)
