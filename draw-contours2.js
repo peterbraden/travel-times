@@ -1,9 +1,9 @@
 var DATA_FILE = process.env.DATA_FILE
   , DATA = require(DATA_FILE)
-  , NUM_INTERVALS = 9
-  , SQUARES = 15
+  , SQUARES = 25
+  , NUM_INTERVALS = SQUARES/2
   , CENTER = JSON.parse(process.env.CENTER || "[]")
-  , IMG_LONGSIDE = parseInt(process.env.IMGLONGSIDE) || 500
+  , IMG_LONGSIDE = parseInt(process.env.IMGLONGSIDE) || 700
 
 var sum = function(){
   return Array.prototype.reduce.call(arguments, function(x, y){return x + y}, 0)
@@ -23,6 +23,54 @@ var points = Object.keys(DATA).map(function(x){return x.split(',').map(parseFloa
   , WIDTH = (maxLon-minLon) > (maxLat - minLat) ? IMG_LONGSIDE : IMG_LONGSIDE * ((maxLon-minLon)/(maxLat-minLat))
   , canvas = new Canvas(WIDTH, HEIGHT)
   , ctx = canvas.getContext('2d')
+
+var dedupeSegments = function(lines) {
+  var join = function(x, y){
+    lines[x] = lines[x].concat(lines[y].slice(1))
+    lines.splice(y, 1)  
+  }
+
+  var equal = function(x, y){
+    var tolerance = 0.00000000000001
+    return Math.abs(x[0] - y[0]) < tolerance && Math.abs(x[1] - y[1]) < tolerance
+  }
+
+  var match = function(x, y, reversed){
+    if(reversed)
+      lines[y].reverse()
+
+    if (equal(lines[x][0], lines[y][0])){
+      lines[y].reverse()
+      join(y, x)
+      return true
+    }
+    return false
+  }
+
+  var i = 0;
+  while (i < lines.length){
+    var changed = false
+
+    for (var j = 0; j < lines.length && i < lines.length; j++){
+      if (i == j){
+        continue
+      }
+
+      if(match(i, j) || match(i, j, true)){
+        changed = true
+        continue
+      }
+    }
+
+    if (!changed){
+      i++;
+    } else {
+      i = 0
+    }
+  }
+  return lines
+}
+
 
 for (var inc = ((maxLat-minLat)/SQUARES), i = minLat + inc; i <= maxLat; i += inc){
   
@@ -93,7 +141,10 @@ var getLines = function(bmp, tl, tr, bl, br){
   })[bmp] || []
   return ret
 }
-
+/*
+var squares = require('./marchingSquares')
+  , contours = squares(pointsIterator, contoursIterator, 4, squares.dimensionFourKeypoints)
+*/
 
 for (var i = 0; i < 1; i += 1/NUM_INTERVALS){
   var maxInterval = maxTime * i
@@ -105,6 +156,14 @@ for (var i = 0; i < 1; i += 1/NUM_INTERVALS){
 
   for (var x = 0; x < SQUARES - 1; x++){
     for (var y = 0; y < SQUARES - 1; y++){
+      // Check data in square:
+      if (!lats(x) || !subdivisions[lats(x)] || !lons(x,y)){
+        continue
+      }
+      if (!lats(x+1) || !subdivisions[lats(x+1)] || !lons(x+1,y+1)){
+        continue
+      }
+
       var tlp = [lats(x), lons(x,y)]
         , tl = get.apply(null, tlp)
         , trp = [lats(x+1), lons(x+1, y)]
@@ -123,8 +182,12 @@ for (var i = 0; i < 1; i += 1/NUM_INTERVALS){
       lines = lines.concat(getLines(bitmap, tlp, trp, blp, brp))
     }
   }
+  lines = dedupeSegments(lines)
   contours[maxInterval] = lines
 }
+
+
+
 
 // -- draw it
 
@@ -151,14 +214,24 @@ Object.keys(contours).forEach(function(c){
   console.log(c, ctx.strokeStyle, contours[c].length)
 
   contours[c].forEach(function(pts){
+    var points = pts.map(makePoint)
+      , i = 0
+    console.log(points)
     ctx.beginPath()
-    var start = makePoint(pts[0])
-    ctx.moveTo(start[0], start[1])
-
-    pts.slice(1).forEach(function(ll){
-      var p = makePoint(ll)
-      ctx.lineTo(p[0],p[1])
-    })
+    ctx.moveTo(points[0][0], points[0][1])
+    if (points.length > 2){
+      // Quadratic
+      for (i = 1; i < points.length-2; i++){
+        var xc = (points[i][0] + points[i + 1][0]) / 2
+          , yc = (points[i][1] + points[i + 1][1]) / 2
+        ctx.quadraticCurveTo(points[i][0], points[i][1], xc, yc);
+      }
+      ctx.quadraticCurveTo(points[i][0], points[i][1], points[i+1][0],points[i+1][1]); // last 2 points
+    } else {
+      points.slice(1).forEach(function(p){
+        ctx.lineTo(p[0],p[1])
+      })
+    }
     ctx.stroke();
   })
 })

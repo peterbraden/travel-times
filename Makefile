@@ -1,8 +1,15 @@
 
+
+collectData:
+	@echo $(DATA_FILE)
+	@echo $(CENTER)
+	@echo $(BOUNDS)
+	@if test -f $(DATA_FILE); then echo 'file exists'; else echo '{}' >> $(DATA_FILE); fi;
+	node collect-data.js
+
 zurichData:
 	# Centered on HB
-	@if test -f zurich.json; then echo 'file exists'; else echo '{}' >> zurich.json; fi;
-	CENTER=[47.377212,8.540046] BOUNDS=[[47.391144,8.486938],[47.337659,8.587189]] DATA_FILE=./zurich.json node collect-data.js  
+	CENTER=[47.377212,8.540046] BOUNDS=[[47.391144,8.486938],[47.337659,8.587189]] DATA_FILE=./zurich.json make collectData 
 
 zurichRender:
 	IMGLONGSIDE=1000 DATA_FILE=./zurich.json node draw-contours.js
