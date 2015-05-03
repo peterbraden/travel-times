@@ -27,4 +27,6 @@ sanfranciscoData:
 	# Centered on Montgomery St. Bart.
 	@if test -f sf.json; then echo 'file exists'; else echo '{}' >> sf.json; fi;
 	CENTER=[37.788953,-122.402136] BOUNDS=[[37.808529,-122.518845],[37.733627, -122.361603]] DATA_FILE=./sf.json node collect-data.js  
-	
+
+schweizRender:
+	IMGLONGSIDE=1000 DATA_FILE=./schweiz.json node draw-contours2.js
