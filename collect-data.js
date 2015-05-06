@@ -1,5 +1,6 @@
 var req = require('superagent')
   , fs = require('fs')
+  , maxRequests = 1000
 
 
 
@@ -83,10 +84,9 @@ var rateLimitGet = function(coordGen){
   var ratePerReq = 30 //99
     , timeout = 60*1000*10 // 10 min for now
     , dests = []
-    , maxRequests = 1000
 
   if (sent > maxRequests){
-    console.log("Exceeded rate limit, sleep for Day")
+    console.log("Exceeded rate limit, sleep for Day :", sent)
     maxRequests += sent
     return setTimeout(rateLimitGet.bind(null, coordGen), 1000*60*60*24)
     //process.exit(0)
