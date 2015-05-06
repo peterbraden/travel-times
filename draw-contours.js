@@ -141,7 +141,7 @@ mesh.forEach(function(p){
 })
 
 ctx.fillStyle="hsla(0, 0%, 0%, 0)"
-
+/*
 Object.keys(contours).forEach(function(c){
 
   ctx.strokeStyle = makeColor(c, maxTime)
@@ -160,7 +160,7 @@ Object.keys(contours).forEach(function(c){
   })
 
 })
-
+*/
 
 
 if (CENTER.length){

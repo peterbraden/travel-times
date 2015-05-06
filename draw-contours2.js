@@ -1,6 +1,6 @@
 var DATA_FILE = process.env.DATA_FILE
   , DATA = require(DATA_FILE)
-  , SQUARES = 25
+  , SQUARES = process.env.SQUARES || 30
   , NUM_INTERVALS = SQUARES/2
   , CENTER = JSON.parse(process.env.CENTER || "[]")
   , IMG_LONGSIDE = parseInt(process.env.IMGLONGSIDE) || 700
@@ -197,26 +197,29 @@ var makePoint = function(pt){
     , HEIGHT - ((pt[1]-minLon) / (maxLon-minLon) * HEIGHT)
   ]
 }  
-var makeColor = function(val, max){ return "hsla(" + (val/max*180) + ", 100%, 50%,0.5)"}
+
+var makeColor = function(val, max, power){ 
+  var hue = (val/max*360)
+  return "hsla(" + hue + ", 100%, 50%,0.5)"
+}
 
 // DEBUG, shade mesh
 Object.keys(subdivisions).forEach(function(lat){
   Object.keys(subdivisions[lat]).forEach(function(lon){
     var pt = makePoint([lat, lon])
-    ctx.fillStyle = makeColor(subdivisions[lat][lon], maxTime)
+    ctx.fillStyle = makeColor(subdivisions[lat][lon], maxTime, 2)
     ctx.fillRect(pt[0], pt[1], WIDTH/SQUARES, HEIGHT/SQUARES)
   })
 })
 
 Object.keys(contours).forEach(function(c){
-
   ctx.strokeStyle = makeColor(c, maxTime)
-  console.log(c, ctx.strokeStyle, contours[c].length)
+  //console.log(c, ctx.strokeStyle, contours[c].length)
 
   contours[c].forEach(function(pts){
     var points = pts.map(makePoint)
       , i = 0
-    console.log(points)
+    //console.log(points)
     ctx.beginPath()
     ctx.moveTo(points[0][0], points[0][1])
     if (points.length > 2){
