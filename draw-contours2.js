@@ -1,6 +1,6 @@
 var DATA_FILE = process.env.DATA_FILE
   , DATA = require(DATA_FILE)
-  , SQUARES = 30
+  , SQUARES = process.env.SQUARES || 30
   , NUM_INTERVALS = SQUARES/2
   , CENTER = JSON.parse(process.env.CENTER || "[]")
   , IMG_LONGSIDE = parseInt(process.env.IMGLONGSIDE) || 700

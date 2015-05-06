@@ -29,4 +29,4 @@ sanfranciscoData:
 	CENTER=[37.788953,-122.402136] BOUNDS=[[37.808529,-122.518845],[37.733627, -122.361603]] DATA_FILE=./sf.json node collect-data.js  
 
 schweizRender:
-	IMGLONGSIDE=1000 DATA_FILE=./schweiz.json node draw-contours2.js
+	SQUARES=100 IMGLONGSIDE=1000 DATA_FILE=./schweiz.json node draw-contours2.js
